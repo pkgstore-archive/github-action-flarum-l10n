@@ -45,8 +45,10 @@ getL10N() {
 
 getL10N
 
-${git} add .                                \
-  && ${git} commit -a -m "L10N: timestamp"  \
+ts=$( _timestamp )
+
+${git} add .                            \
+  && ${git} commit -a -m "L10N: ${ts}"  \
   && ${git} push 'l10n'
 
 exit 0

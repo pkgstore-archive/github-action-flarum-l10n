@@ -28,18 +28,25 @@ _timestamp() {
 }
 
 _getAPI() {
-  ${curl} -s -X GET -H "${header}" "${1}"
+  ${curl} -sf -X GET -H "${header}" "${1}"
 }
 
 _getFile() {
-  ${curl} -s -X GET -H "${header}" "${1}" -o "${2}"
+  ${curl} -sf -X GET -H "${header}" "${1}" -o "${2}"
 }
 
 getL10N() {
   for ext in "${exts[@]}"; do
-    url=$( _getAPI "https://api.github.com/repos/${ext}/contents/resources/locale/en.yml" | ${jq} -r '.download_url' )
-    name=$( _getAPI "${url}" | sed -n 1p | sed "s/://g" )
-    _getFile "${url}" "${name}.yml"
+    url_api=$( _getAPI "https://api.github.com/repos/${ext}/contents/resources/locale/en.yml" )
+    url_api_res="${?}"
+
+    if [[ ${url_api_res} != "0" ]]; then
+      url_api=$( _getAPI "https://api.github.com/repos/${ext}/contents/locale/en.yml" )
+    fi
+
+    url_dwn=$( echo "${url_api}" | ${jq} -r '.download_url' )
+    name=$( _getAPI "${url_dwn}" | sed -n 1p | sed "s/://g" )
+    _getFile "${url_dwn}" "${name}.yml"
   done
 }
 

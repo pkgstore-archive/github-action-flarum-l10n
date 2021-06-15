@@ -37,6 +37,8 @@ _getFile() {
 
 getL10N() {
   for ext in "${exts[@]}"; do
+    echo "" && echo "--- Open: '${ext}'"
+
     url_api=$( _getAPI "https://api.github.com/repos/${ext}/contents/resources/locale/en.yml" )
     url_api_res="${?}"
 
@@ -47,6 +49,8 @@ getL10N() {
     url_dwn=$( echo "${url_api}" | ${jq} -r '.download_url' )
     name=$( _getAPI "${url_dwn}" | sed -n 1p | sed "s/://g" )
     _getFile "${url_dwn}" "${name}.yml"
+
+    echo "" && echo "--- Done: '${ext}'" && echo ""
   done
 }
 

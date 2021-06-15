@@ -5,7 +5,7 @@ USER="${2}"
 EMAIL="${3}"
 TOKEN="${4}"
 
-map="exts.txt"
+map="_exts.txt"
 header="Authorization: token ${TOKEN}"
 
 git=$( command -v git )

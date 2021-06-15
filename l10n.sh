@@ -24,8 +24,7 @@ ${git} remote add 'l10n' "${REPO_AUTH}"
 mapfile -t exts < "${map}"
 
 _timestamp() {
-  timestamp=$( ${date} -u '+%Y-%m-%d %T' )
-  echo "${timestamp}"
+  ${date} -u '+%Y-%m-%d %T'
 }
 
 _getAPI() {
@@ -46,8 +45,8 @@ getL10N() {
 
 getL10N
 
-${git} add .                                      \
-  && ${git} commit -a -m "L10N: $( _timestamp )"  \
+${git} add .                                \
+  && ${git} commit -a -m "L10N: timestamp"  \
   && ${git} push 'l10n'
 
 exit 0

@@ -37,7 +37,7 @@ _getFile() {
 
 getL10N() {
   for ext in "${exts[@]}"; do
-    echo "" && echo "--- Open: '${ext}'" && echo ""
+    echo "--- Open: '${ext}'"
 
     url_api=$( _getAPI "https://api.github.com/repos/${ext}/contents/resources/locale/en.yml" )
     url_api_res="${?}"

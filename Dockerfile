@@ -7,6 +7,6 @@ LABEL "repository"="https://github.com/pkgstore/github-action-flarum-l10n.git"
 LABEL "homepage"="https://pkgstore.github.io/"
 
 COPY *.sh /
-RUN apk add --no-cache bash curl git git-lfs jq
+RUN apk add --no-cache bash curl git git-lfs jq sed
 
 ENTRYPOINT ["/entrypoint.sh"]

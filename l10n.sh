@@ -8,10 +8,11 @@ TOKEN="${4}"
 map="_exts.txt"
 header="Authorization: token ${TOKEN}"
 
-git=$( command -v git )
-date=$( command -v date )
 curl=$( command -v curl )
+date=$( command -v date )
+git=$( command -v git )
 jq=$( command -v jq )
+sed=$( command -v sed )
 
 ${git} config --global user.email "${EMAIL}"
 ${git} config --global user.name "${USER}"
@@ -47,7 +48,7 @@ getL10N() {
     fi
 
     url_dwn=$( echo "${url_api}" | ${jq} -r '.download_url' )
-    name=$( _getAPI "${url_dwn}" | sed -n 1p | sed "s/://g" )
+    name=$( _getAPI "${url_dwn}" | ${sed} -n 1p | ${sed} "s/://g" )
     _getFile "${url_dwn}" "${name}.yml"
   done
 }

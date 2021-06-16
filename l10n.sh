@@ -19,7 +19,7 @@ ${git} config --global user.name "${USER}"
 
 REPO_AUTH="https://${USER}:${TOKEN}@${REPO#https://}"
 
-${git} clone "${REPO_AUTH}" '/root/git/source' && cd '/root/git/source' || exit 1
+${git} clone "${REPO_AUTH}" '/root/git/l10n' && cd '/root/git/l10n' || exit 1
 ${git} remote add 'l10n' "${REPO_AUTH}"
 
 mapfile -t exts < "${map}"

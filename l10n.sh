@@ -8,11 +8,11 @@ TOKEN="${4}"
 map="_exts.txt"
 header="Authorization: token ${TOKEN}"
 
-curl=$( command -v curl )
-date=$( command -v date )
-git=$( command -v git )
-jq=$( command -v jq )
-sed=$( command -v sed )
+curl="$( command -v curl )"
+date="$( command -v date )"
+git="$( command -v git )"
+jq="$( command -v jq )"
+sed="$( command -v sed )"
 
 ${git} config --global user.email "${EMAIL}"
 ${git} config --global user.name "${USER}"

@@ -56,6 +56,9 @@ get_l10n() {
 
     if [[ ${url_api_res} != "0" ]]; then
       url_api=$( _get_api "https://api.github.com/repos/${ext}/contents/locale/en.yml" )
+      if [[ ${url_api_res} != "0" ]]; then
+        url_api=$( _get_api "https://api.github.com/repos/${ext}/contents/locale/core.yml" )
+      fi
     fi
 
     url_download=$( echo "${url_api}" | ${jq} -r '.download_url' )

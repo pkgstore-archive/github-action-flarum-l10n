@@ -56,19 +56,12 @@ get_l10n() {
 
     if [[ ${url_api_res} != "0" ]]; then
       url_api=$( _get_api "https://api.github.com/repos/${ext}/contents/locale/en.yml" )
-      if [[ ${url_api_res} != "0" ]]; then
-        url_api=$( _get_api "https://api.github.com/repos/${ext}/contents/locale/core.yml" )
-      fi
     fi
 
     url_download=$( echo "${url_api}" | ${jq} -r '.download_url' )
     name=$( _get_api "${url_download}" | ${sed} -n 1p | ${sed} "s/://g" )
 
-    if [[ "${name}" == "core" ]]; then
-      _get_file "${url_download}" "${ext//\//_}-${name}.yml"
-    else
-      _get_file "${url_download}" "${name}.yml"
-    fi
+    _get_file "${url_download}" "${name}.yml"
   done
 
   _popd || exit 1

@@ -61,7 +61,11 @@ get_l10n() {
     url_download=$( echo "${url_api}" | ${jq} -r '.download_url' )
     name=$( _get_api "${url_download}" | ${sed} -n 1p | ${sed} "s/://g" )
 
-    _get_file "${url_download}" "${name}.yml"
+    if [[ "${name}" == "core" ]]; then
+      _get_file "${url_download}" "${ext//\//_}-${name}.yml"
+    else
+      _get_file "${url_download}" "${name}.yml"
+    fi
   done
 
   _popd || exit 1

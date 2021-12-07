@@ -6,9 +6,11 @@ init() {
   EMAIL="${3}"
   TOKEN="${4}"
 
-  map="_exts.txt"
-  header="Authorization: token ${TOKEN}"
+  curl_header="Authorization: token ${TOKEN}"
+  file_exts="_exts.txt"
   path_repo="/root/git/l10n"
+  api_url=""
+  api_code="0"
 
   curl="$( command -v curl )"
   date="$( command -v date )"
@@ -36,7 +38,7 @@ git_clone() {
     && _pushd "${path_repo}" || exit 1
   ${git} remote add 'l10n' "${REPO_AUTH}"
 
-  mapfile -t exts < "${map}"
+  mapfile -t exts < "${file_exts}"
   _popd || exit 1
 }
 
@@ -49,21 +51,22 @@ get_l10n() {
     && _pushd "${path_repo}/locale" || exit 1
 
   for ext in "${exts[@]}"; do
-    echo "--- Open: '${ext}'"
+    echo "--- [CURL] GET: '${ext}'"
 
-    url_api=$( _get_api "https://api.github.com/repos/${ext}/contents/resources/locale/en.yml" )
-    url_api_res="${?}"
+    api_url=$( _get_api "https://api.github.com/repos/${ext}/contents/resources/locale/en.yml" )
+    api_code="${?}"
 
-    if [[ ${url_api_res} != "0" ]]; then
-      url_api=$( _get_api "https://api.github.com/repos/${ext}/contents/locale/en.yml" )
-      url_api_res="${?}"
+    if [[ "${api_code}" != "0" ]]; then
+      api_url=$( _get_api "https://api.github.com/repos/${ext}/contents/locale/en.yml" )
+      api_code="${?}"
     fi
 
-    if [[ ${url_api_res} != "0" ]]; then
-      url_api=$( _get_api "https://api.github.com/repos/${ext}/contents/locale/core.yml" )
+    if [[ "${api_code}" != "0" ]]; then
+      api_url=$( _get_api "https://api.github.com/repos/${ext}/contents/locale/core.yml" )
+      api_code="${?}"
     fi
 
-    url_download=$( echo "${url_api}" | ${jq} -r '.download_url' )
+    url_download=$( echo "${api_url}" | ${jq} -r '.download_url' )
     name=$( _get_api "${url_download}" | ${sed} -n 1p | ${sed} "s/://g" )
 
     if [[ "${name}" == "core" ]]; then
@@ -86,7 +89,7 @@ git_push() {
   ts="$( _timestamp )"
 
   ${git} add . \
-    && ${git} commit -a -m "L10N: ${ts}" \
+    && ${git} commit -a -m "[L10N] AUTO-UPDATE: ${ts}" \
     && ${git} push 'l10n'
 
   _popd || exit 1
@@ -113,12 +116,12 @@ _timestamp() {
 
 # Get API.
 _get_api() {
-  ${curl} -sf -X GET -H "${header}" "${1}"
+  ${curl} -sf -X GET -H "${curl_header}" "${1}"
 }
 
 # Get files.
 _get_file() {
-  ${curl} -f -X GET -H "${header}" "${1}" -o "${2}"
+  ${curl} -f -X GET -H "${curl_header}" "${1}" -o "${2}"
 }
 
 # -------------------------------------------------------------------------------------------------------------------- #
